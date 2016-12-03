@@ -1,8 +1,8 @@
-#define CHUNK_SIZE = 100;
+#define CHUNK_SIZE 100
 
 typedef struct Chunk {
 	char buffer[CHUNK_SIZE];
-	Chunk *next;
+	struct Chunk *next;
 	int numChars;
 } Chunk;
 
@@ -11,9 +11,14 @@ typedef struct Cursor {
 	int index;
 } Cursor;
 
-Chunk *start;
-Cursor c;
+typedef struct VimeBuffer {
+	Chunk *start;
+	Cursor c;
+
+} VimeBuffer;
+
+VimeBuffer *init();
 
 void insert(char c);
 
-void readFile(
+void readFile(VimeBuffer *vb, char *filename);
