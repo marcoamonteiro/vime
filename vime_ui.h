@@ -1,15 +1,19 @@
 #ifndef __VIME_UI_H
 #define __VIME_UI_H
 
-typedef struct {
-    size_t line;
-    size_t column;
+#include "util.h"
+
+typedef struct VimeUI {
+    uint line;
+    uint column;
 } *VimeUI;
 
 VimeUI VimeUI_new(void);
-void VimeUI_clear(void);
-void VimeUI_render(void);
-void VimeUI_setLine(size_t line);
-void VimeUI_setColumn(size_t column);
+void VimeUI_dispose(VimeUI vui);
+
+void VimeUI_clear(VimeUI vui);
+void VimeUI_render(VimeUI vui);
+void VimeUI_setLine(VimeUI vui, uint line);
+void VimeUI_setColumn(VimeUI vui, uint column);
 
 #endif
