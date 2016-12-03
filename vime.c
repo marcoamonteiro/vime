@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include "vime_ui.h"
-#include "buffer.h"
+#include "vime_buffer.h"
 #include "util.h"
 
 static VimeUI ui;
-static VimeUIDelegate uiDelegate;
-static VimeBuffer buffer;
+static VimeBuffer vb;
 
 char *getLine(uint line);
 
@@ -16,13 +15,13 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    buffer = VimeBuffer_new();
-    VimeBuffer_readFile(buffer, argv[1]);
-    ui = VimeUI_new();
+    vb = VimeBuffer_new();
+    VB_load(vb, argv[1]);
 
-    uiDelegate = VimeUIDelegate_new();
-    uiDelegate->stringForLine = &getLine;
-    VimeUI_render(ui);
+    ui = VimeUI_new();
+    ui->stringForLine = &getLine;
+    VUI_render(ui);
+
     VimeUI_dispose(ui);
     return 0;
 }

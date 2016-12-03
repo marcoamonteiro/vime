@@ -1,14 +1,14 @@
-
-OUT=vime
-
 CC=gcc
 CFLAGS=
-OBJ=vime.o vime_ui.o
-DEPS=vime_ui.h util.h
+OBJ=vime.o vime_ui.o vime_buffer.o
+DEPS=vime_ui.h vime_buffer.h util.h
 LIBS=-lncurses
 
-$(OUT): $(OBJ) $(DEPS)
-	$(CC) $(OBJ) -o $@ $(CFLAGS) $(LIBS)
+vime: $(OBJ)
+	$(CC) $^ -o $@ $(CFLAGS) $(LIBS)
+
+buffer_test: $(OBJ) buffer_test.c
+	$(CC) $^ -o $@ $(CFLAGS) $(LIBS)
 
 %.o: %.c $(DEPS)
 	$(CC) -c $< -o $@ $(CFLAGS)
