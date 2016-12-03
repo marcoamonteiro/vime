@@ -3,14 +3,14 @@ OUT=vime
 
 CC=gcc
 CFLAGS=
-OBJ=vime.o
+OBJ=vime.o vime_ui.o
 LIBS=-lncurses
 
 $(OUT): $(OBJ)
-	$(CC) -c $^ -o $@ $(CFLAGS) $(LIBS)
+	$(CC) $^ -o $@ $(CFLAGS) $(LIBS)
 
 %.o: %.c
-	$(CC) $< -o $@ $(CFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
 	rm -f $(OBJ) $(OUT)
