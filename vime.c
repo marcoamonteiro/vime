@@ -32,9 +32,11 @@ int main(int argc, char *argv[]) {
 
 // Get string for given line number. This returns the string to the UI when
 // it asks for it. It gets the string from the VimeBuf.
-char *getLine(uint line) {
-    char *string = strdup(" ");
-    string[0] = vbGet(vc);
-    return string;
+string getLine(uint line) {
+    VBCursor cp = vbDup(vc);
+    if (!vbToLine(cp, line)) return NULL;
+    string s = vbLine(cp);
+    vbDispose(cp);
+    return s;
 }
 

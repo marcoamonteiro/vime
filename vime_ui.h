@@ -6,6 +6,8 @@
 typedef struct VimeUI {
     uint line;
     uint column;
+    uint top;
+    uint bottom;
     char *(*stringForLine)(uint line);
 } *VimeUI;
 
