@@ -37,13 +37,12 @@ VBCursor vbOpen(char *filename) {
     //
     // TODO: Implement block-level reading/insertion to improve performance on
     // large files.
-	while (true) {
+    while (true) {
 		char ch = fgetc(file);
 		if (feof(file)) break;
         vbInsert(c, ch);
         vbForward(c);
     }
-
 	fclose(file);
     return c;
 }
@@ -176,7 +175,7 @@ bool vbForward(VBCursor c) {
         c->column = 1;
         c->line += 1;
     } else {
-        c->column = 1;
+        c->column += 1;
     }
     return vbForwardRaw(c);
 }
@@ -189,9 +188,9 @@ bool vbBackward(VBCursor c) {
         c->line -= 1;
 
         VBCursor cp = vbDup(c);
-        while (vbBackwardRaw(c)) {
+        while (vbBackwardRaw(cp)) {
             if (vbGet(cp) == '\n') {
-                vbForwardRaw(c);
+                vbForwardRaw(cp);
                 break;
             }
         }
@@ -217,19 +216,17 @@ bool vbMove(VBCursor c, int delta) {
 }
 
 bool vbMoveLine(VBCursor c, int delta) {
-    uint originalCol = c->column;
     uint targetLine = c->line + delta;
 
-    if (delta < 0) {
+    if (delta <= 0) {
         while (true) {
             if (!vbBackward(c)) return false;
-            if (c->line == targetLine && c->column <= originalCol) return true;
+            if (c->line == targetLine && c->column == 0) return true;
         }
     } else {
         while (true) {
             if (!vbForward(c)) return false;
-            if (c->line == targetLine && c->column == originalCol) return true;
-            if (c->line > targetLine) return vbBackward(c);
+            if (c->line == targetLine && c->column == 0) return true;
         }
     }
 }
@@ -318,4 +315,5 @@ void vbInsert(VBCursor c, char ch) {
         }
     }
 }
+
 
