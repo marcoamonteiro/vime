@@ -6,38 +6,53 @@
 
 #define VB_BLOCK_CAPACITY 100
 
-typedef struct VB_Block {
-    struct VB_Block *next;
-    struct VB_Block *previous;
+typedef struct VBBlock {
+    struct VBBlock *next;
+    struct VBBlock *previous;
 	char payload[VB_BLOCK_CAPACITY];
     uint size;
-} *VB_Block;
+} *VBBlock;
 
-typedef struct VB_Cursor {
-	VB_Block block;
+typedef struct VBCursor {
+    // File level. Tracks absolute location in the file as a byte number.
+    uint pos;
+
+    // Block level. Tracks internal block pointer and index into block.
+	VBBlock block;
 	uint index;
-} *VB_Cursor;
 
-typedef struct VimeBuffer {
-	VB_Block start;
-	VB_Cursor cursor;
-} *VimeBuffer;
+    // Text level. Stores line and column number.
+    uint line;
+    uint column;
+} *VBCursor;
 
-void ValidateBuffer(VimeBuffer *vb);
+VBCursor vbOpen(char *filename);
+VBCursor vbDup(VBCursor c);
+void vbClose(VBCursor c);
+void vbDispose(VBCursor c);
 
-VimeBuffer VimeBuffer_new(void);
-void VimeBuffer_dispose(VimeBuffer vb);
-bool VB_insert(VimeBuffer vb, char c);
-bool VB_delete(VimeBuffer vb);
-bool VB_load(VimeBuffer vb, char *filename);
-bool VB_forward(VimeBuffer vb);
-bool VB_backward(VimeBuffer vb);
-// bool VB_jump(VimeBuffer vb, uint line, uint column);
+VBBlock vbBlock(void);
+VBBlock vbSplit(VBBlock old);
 
-VB_Block VB_Block_new(void);
-VB_Block VB_Block_split(VB_Block old);
-void VB_Block_dispose(VB_Block b);
+bool vbEOF(VBCursor c);
+bool vbSOF(VBCursor c);
 
-VB_Cursor VB_Cursor_new(VB_Block b, uint i);
+#define END 0
+
+bool vbForward(VBCursor c);
+bool vbBackward(VBCursor c);
+bool vbTo(VBCursor c, uint pos);
+bool vbToLine(VBCursor c, uint line);
+bool vbToCol(VBCursor c, uint col);
+bool vbMove(VBCursor c, int delta);
+bool vbMoveLine(VBCursor c, int delta);
+bool vbMoveCol(VBCursor c, int delta);
+
+char vbGet(VBCursor c);
+void vbPut(VBCursor c, char ch);
+char vbDelete(VBCursor c);
+void vbInsert(VBCursor c, char ch);
+
+uint vbDistance(VBCursor c1, VBCursor c2);
 
 #endif

@@ -1,10 +1,11 @@
-#include <stdio.h>
 #include "vime_ui.h"
 #include "vime_buffer.h"
 #include "util.h"
+#include <stdio.h>
+#include <string.h>
 
 static VimeUI ui;
-static VimeBuffer vb;
+static VBCursor vc;
 
 char *getLine(uint line);
 
@@ -15,8 +16,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    vb = VimeBuffer_new();
-    VB_load(vb, argv[1]);
+    vc = vbOpen(argv[1]);
 
     ui = VimeUI_new();
     ui->stringForLine = &getLine;
@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
 // Get string for given line number. This returns the string to the UI when
 // it asks for it. It gets the string from the VimeBuf.
 char *getLine(uint line) {
-    return VimeBuffer_getLine(buffer, line);
+    char *string = strdup(" ");
+    string[0] = vbGet(vc);
+    return string;
 }
 

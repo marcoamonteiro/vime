@@ -48,11 +48,3 @@ void VimeUI_setColumn(VimeUI ui, uint col) {
     ui->column = col;
 }
 
-VimeUIDelegate VimeUIDelegate_new() {
-    VimeUIDelegate delegate = malloc(sizeof(struct VimeUIDelegate));
-    return delegate;
-}
-
-void VimeUIDelegate_dispose(VimeUIDelegate d) {
-    free(d);
-}
