@@ -52,6 +52,7 @@ char vbGet(VBCursor c);
 void vbPut(VBCursor c, char ch);
 char vbDelete(VBCursor c);
 void vbInsert(VBCursor c, char ch);
+string vbLine(VBCursor c);
 
 uint vbDistance(VBCursor c1, VBCursor c2);
 

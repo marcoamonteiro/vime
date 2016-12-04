@@ -53,5 +53,10 @@ void buffer_dump(VBCursor c) {
     for (i = 0; vbBackward(cp); i += 1);
     printf("length: %d\n", vbDistance(cp, c));
     printf("lines: %d\n", c->line);
+    vbDispose(cp);
+
+    const uint l = 18;
+    vbToLine(c, l);
+    printf("Line %d is '%s'.\n", l, vbLine(c));
 }
 

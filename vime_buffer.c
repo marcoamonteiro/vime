@@ -220,13 +220,13 @@ bool vbMoveLine(VBCursor c, int delta) {
 
     if (delta <= 0) {
         while (true) {
+            if (c->line == targetLine && c->column == 1) return true;
             if (!vbBackward(c)) return false;
-            if (c->line == targetLine && c->column == 0) return true;
         }
     } else {
         while (true) {
+            if (c->line == targetLine && c->column == 1) return true;
             if (!vbForward(c)) return false;
-            if (c->line == targetLine && c->column == 0) return true;
         }
     }
 }
@@ -234,7 +234,7 @@ bool vbMoveLine(VBCursor c, int delta) {
 bool vbMoveCol(VBCursor c, int delta) {
     if (delta < 0) {
         for (int i = delta; i < 0; i += 1) {
-            if (c->column == 0) return false;
+            if (c->column == 1) return false;
             vbBackwardRaw(c);
             c->column -= 1;
         }
@@ -316,4 +316,27 @@ void vbInsert(VBCursor c, char ch) {
     }
 }
 
+string vbLine(VBCursor c) {
+    VBCursor cp = vbDup(c);
+    vbMoveLine(cp, 0);
 
+    uint bufSize = 100;
+    string buf = malloc(bufSize);
+
+    uint i = 0;
+    for (i = 0; !vbEOF(cp); i += 1) {
+        char ch = vbGet(cp);
+        if (ch == '\n') break;
+        buf[i] = ch;
+        vbForward(cp);
+        
+        if (i == bufSize - 1) {
+            bufSize *= 2;
+            buf = realloc(buf, bufSize);
+        }
+    }
+    buf[i] = '\0';
+    string resized = strdup(buf);
+    free(buf);
+    return resized;
+}
